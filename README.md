@@ -1,4 +1,4 @@
-# Web Insight Pro
+# Web Insight
 
 Web Insight Pro is a web application designed to analyze any website and extract its structural headings (H1, H2, H3) in real time.
 
