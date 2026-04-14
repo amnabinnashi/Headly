@@ -2,24 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Headly | Web Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background: linear-gradient(135deg, #1f1c2c, #928dab);
             color: white;
             min-height: 100vh;
         }
 
-        header {
+        /* Navbar */
+        .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -27,135 +28,146 @@
         }
 
         .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo h2 {
             font-size: 24px;
-            font-weight: bold;
-            color: #fff;
         }
 
-        .nav {
-            font-size: 14px;
-            opacity: 0.8;
+        .nav-text {
+            opacity: 0.7;
         }
 
+        /* Main */
         .container {
             text-align: center;
             margin-top: 80px;
             padding: 20px;
         }
 
-        h1 {
-            font-size: 42px;
-            margin-bottom: 10px;
+        .title {
+            font-size: 48px;
+            font-weight: bold;
         }
 
-        p {
-            opacity: 0.7;
-            margin-bottom: 30px;
+        .subtitle {
+            margin-top: 10px;
+            opacity: 0.8;
         }
 
-        .input-box {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+        /* Input */
+        .search-box {
+            margin-top: 30px;
         }
 
         input {
+            padding: 15px;
             width: 60%;
             max-width: 400px;
-            padding: 15px;
-            border-radius: 50px;
+            border-radius: 30px;
             border: none;
             outline: none;
-            font-size: 14px;
         }
 
         button {
             padding: 15px 25px;
-            border-radius: 50px;
             border: none;
-            background: linear-gradient(135deg, #ff7a18, #ffb347);
+            border-radius: 30px;
+            margin-left: 10px;
+            background: linear-gradient(45deg, #ff7e5f, #feb47b);
             color: white;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
         }
 
         button:hover {
-            transform: scale(1.05);
+            opacity: 0.9;
         }
 
+        /* Results */
         .results {
-            margin-top: 30px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-top: 40px;
         }
 
         .card {
             background: rgba(255,255,255,0.1);
+            margin: 10px auto;
             padding: 15px;
-            margin: 10px 0;
             border-radius: 15px;
+            width: 80%;
+            max-width: 500px;
             text-align: left;
-            backdrop-filter: blur(10px);
         }
 
         .tag {
-            font-size: 12px;
-            color: #ffb347;
-            margin-bottom: 5px;
+            color: #ffcc70;
+            font-weight: bold;
         }
 
+        /* Footer */
         footer {
-            position: fixed;
-            bottom: 10px;
-            width: 100%;
             text-align: center;
-            font-size: 12px;
+            margin-top: 80px;
+            padding: 20px;
             opacity: 0.6;
         }
-
     </style>
 </head>
 
 <body>
 
-<header>
-    <div class="logo">Headly</div>
-    <div class="nav">Web Analyzer</div>
-</header>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <!-- الشعار -->
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="logo">
+            <h2>Headly</h2>
+        </div>
 
-<div class="container">
-    <h1>Analyze Websites Easily</h1>
-    <p>Extract headings (H1, H2, H3) from any website instantly</p>
+        <div class="nav-text">
+            Web Analyzer
+        </div>
+    </div>
 
-    <form method="POST">
-        <div class="input-box">
+    <!-- Main -->
+    <div class="container">
+        <div class="title">Analyze Websites Easily</div>
+        <div class="subtitle">
+            Extract headings (H1, H2, H3) from any website instantly
+        </div>
+
+        <!-- Form -->
+        <form method="POST" class="search-box">
             <input type="text" name="url" placeholder="Enter website URL..." required>
             <button type="submit">Analyze</button>
-        </div>
-    </form>
+        </form>
 
-    {% if headings %}
-    <div class="results">
-        <p>Found {{ headings|length }} headings</p>
+        <!-- Results -->
+        <div class="results">
+            {% if headings %}
+                <p>Found {{ headings|length }} headings</p>
 
-        {% for tag, text in headings %}
-        <div class="card">
-            <div class="tag">{{ tag }}</div>
-            <div>{{ text }}</div>
+                {% for tag, text in headings %}
+                    <div class="card">
+                        <div class="tag">{{ tag }}</div>
+                        <div>{{ text }}</div>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
-        {% endfor %}
     </div>
-    {% endif %}
 
-</div>
-
-<footer>
-    © 2026 Headly. All rights reserved.
-</footer>
+    <!-- Footer -->
+    <footer>
+        © 2026 Headly. All rights reserved.
+    </footer>
 
 </body>
 </html>
