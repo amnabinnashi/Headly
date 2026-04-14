@@ -24,10 +24,6 @@ Headly is a modern web application that analyzes websites and extracts their str
 - Scraping: BeautifulSoup
 - Deployment: Render
 
-## Live Demo
-
-https://web-insight-scraper.onrender.com
-
 ## Installation
 
 ```bash
