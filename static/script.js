@@ -1,47 +1,64 @@
-console.log("JS is running");
-
 async function analyze() {
     const url = document.getElementById("url").value;
 
-    if (!url) {
-        alert("Please enter a URL");
+    document.getElementById("loading").classList.remove("hidden");
+    document.getElementById("results").classList.add("hidden");
+
+    const response = await fetch("/analyze", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ url: url })
+    });
+
+    const data = await response.json();
+
+    document.getElementById("loading").classList.add("hidden");
+
+    if (data.error) {
+        alert(data.error);
         return;
     }
 
-    document.getElementById("results").classList.add("hidden");
+    const report = data.report;
 
-    try {
-        const response = await fetch("/analyze", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ url: url })
-        });
+    document.getElementById("results").classList.remove("hidden");
 
-        const data = await response.json();
+    // SEO score
+    document.getElementById("seoScore").innerText = report.seo_score;
+    document.getElementById("progressBar").style.width = report.seo_score + "%";
 
-        if (data.error) {
-            alert(data.error);
-            return;
-        }
+    // meta
+    document.getElementById("metaTitle").innerText = report.meta.title || "Missing";
+    document.getElementById("metaDesc").innerText = report.meta.description || "Missing";
 
-        const report = data.report;
+    // headings
+    document.getElementById("headings").innerText =
+        `H1: ${report.stats.H1} | H2: ${report.stats.H2} | H3: ${report.stats.H3}`;
 
-        document.getElementById("results").classList.remove("hidden");
+    // links
+    document.getElementById("links").innerText =
+        `Internal: ${report.internal_links} | External: ${report.external_links}`;
 
-        document.getElementById("seoScore").innerText = report.seo_score;
-        document.getElementById("metaTitle").innerText = report.meta.title;
-        document.getElementById("metaDesc").innerText = report.meta.description;
+    // data
+    document.getElementById("data").innerText =
+        `Images: ${report.data.images} | Scripts: ${report.data.scripts}`;
 
-        document.getElementById("headings").innerText =
-            `H1: ${report.stats.H1} | H2: ${report.stats.H2} | H3: ${report.stats.H3}`;
+    // suggestions
+    const suggestions = [];
 
-        document.getElementById("links").innerText =
-            `Internal: ${report.internal_links} | External: ${report.external_links}`;
+    if (!report.meta.title) suggestions.push("Add a meta title");
+    if (!report.meta.description) suggestions.push("Add a meta description");
+    if (report.stats.H1 === 0) suggestions.push("Add at least one H1 heading");
+    if (report.internal_links < 3) suggestions.push("Add more internal links");
 
-    } catch (err) {
-        alert("Something went wrong");
-        console.error(err);
-    }
+    const list = document.getElementById("suggestions");
+    list.innerHTML = "";
+
+    suggestions.forEach(item => {
+        const li = document.createElement("li");
+        li.innerText = item;
+        list.appendChild(li);
+    });
 }
