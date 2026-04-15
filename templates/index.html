@@ -3,29 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Headly - SEO Analyzer</title>
+
     <style>
         body {
             font-family: Arial;
             background: linear-gradient(135deg, #1f4037, #99f2c8);
             color: white;
             text-align: center;
-            padding: 30px;
+            padding: 20px;
         }
 
         h1 {
             font-size: 40px;
+            margin-bottom: 5px;
+        }
+
+        p {
+            margin-bottom: 20px;
         }
 
         input {
             padding: 15px;
-            width: 60%;
+            width: 65%;
             border-radius: 25px;
             border: none;
             outline: none;
         }
 
         button {
-            padding: 15px 30px;
+            padding: 15px 25px;
             border-radius: 25px;
             border: none;
             background: #00ff99;
@@ -34,71 +40,85 @@
             cursor: pointer;
         }
 
+        .container {
+            max-width: 500px;
+            margin: auto;
+        }
+
         .card {
-            background: rgba(255,255,255,0.1);
-            margin: 20px auto;
+            background: rgba(255,255,255,0.12);
+            margin-top: 15px;
             padding: 20px;
-            width: 80%;
             border-radius: 20px;
+            backdrop-filter: blur(10px);
         }
 
         .value {
-            font-size: 20px;
+            font-size: 18px;
             margin-top: 10px;
         }
     </style>
 </head>
+
 <body>
 
-<h1>Headly</h1>
-<p>Advanced Website Analyzer</p>
+<div class="container">
 
-<form method="POST">
-    <input type="text" name="url" placeholder="Enter website URL" required>
-    <button type="submit">Analyze</button>
-</form>
+    <h1>Headly</h1>
+    <p>Advanced Website Analyzer</p>
 
-{% if data %}
-    <div class="card">
-        <h3>SEO Score</h3>
-        <div class="value">{{ data.score }}</div>
-    </div>
+    <!-- الفورم -->
+    <form method="POST">
+        <input type="text" name="url" placeholder="https://example.com" required>
+        <button type="submit">Analyze</button>
+    </form>
 
-    <div class="card">
-        <h3>Meta Title</h3>
-        <div class="value">{{ data.title }}</div>
-    </div>
+    {% if data %}
 
-    <div class="card">
-        <h3>Meta Description</h3>
-        <div class="value">{{ data.description }}</div>
-    </div>
-
-    <div class="card">
-        <h3>Headings</h3>
-        <div class="value">
-            H1: {{ data.h1 }} | H2: {{ data.h2 }} | H3: {{ data.h3 }}
+        <div class="card">
+            <h3>SEO Score</h3>
+            <div class="value">{{ data.score }}</div>
         </div>
-    </div>
 
-    <div class="card">
-        <h3>Links</h3>
-        <div class="value">
-            Internal: {{ data.internal_links }} | External: {{ data.external_links }}
+        <div class="card">
+            <h3>Meta Title</h3>
+            <div class="value">{{ data.title }}</div>
         </div>
-    </div>
 
-    <!-- 🔥 الجديد -->
-    <div class="card">
-        <h3>SEO Suggestions</h3>
-        <div class="value">
-            {% for tip in data.suggestions %}
-                <p>• {{ tip }}</p>
-            {% endfor %}
+        <div class="card">
+            <h3>Meta Description</h3>
+            <div class="value">{{ data.description }}</div>
         </div>
-    </div>
 
-{% endif %}
+        <div class="card">
+            <h3>Headings</h3>
+            <div class="value">
+                H1: {{ data.h1 }} | H2: {{ data.h2 }} | H3: {{ data.h3 }}
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Links</h3>
+            <div class="value">
+                Internal: {{ data.internal_links }} | External: {{ data.external_links }}
+            </div>
+        </div>
+
+        <!-- 🔥 SEO Suggestions -->
+        {% if data.suggestions %}
+        <div class="card">
+            <h3>SEO Suggestions</h3>
+            <div class="value">
+                {% for tip in data.suggestions %}
+                    <p>• {{ tip }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    {% endif %}
+
+</div>
 
 </body>
 </html>
