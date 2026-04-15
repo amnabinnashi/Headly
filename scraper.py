@@ -1,102 +1,75 @@
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
-from urllib.parse import urljoin, urlparse
-import pandas as pd
+
 
 class WebInsightPro:
     def __init__(self, url):
         self.url = url
-        self.headers = {'User-Agent': 'Mozilla/5.0'}
-        self.data = []
-        self.meta = {}
+        self.soup = None
 
     def fetch_data(self):
         try:
-            response = requests.get(self.url, headers=self.headers, timeout=10)
-            response.raise_for_status()
-
-            soup = BeautifulSoup(response.text, 'html.parser')
-
-            self.meta['title'] = soup.title.string if soup.title else "N/A"
-
-            desc = soup.find("meta", attrs={"name": "description"})
-            self.meta['description'] = desc['content'] if desc else "N/A"
-
-            tags = ['h1', 'h2', 'h3', 'a']
-
-            for element in soup.find_all(tags):
-                content = element.get_text().strip()
-                if not content:
-                    continue
-
-                entry = {
-                    'Type': element.name.upper(),
-                    'Content': content,
-                    'Link': 'N/A',
-                    'Time': datetime.now().strftime("%H:%M:%S")
-                }
-
-                if element.name == 'a':
-                    href = element.get('href')
-                    if href and not href.startswith('#') and not href.startswith('javascript'):
-                        entry['Link'] = urljoin(self.url, href)
-
-                self.data.append(entry)
-
+            res = requests.get(self.url, timeout=10)
+            self.soup = BeautifulSoup(res.text, "html.parser")
+            return None
         except Exception as e:
             return str(e)
 
-    def get_dataframe(self):
-        return pd.DataFrame(self.data)
+    def get_meta(self):
+        title = self.soup.title.string if self.soup.title else "N/A"
 
-    def analyze_structure(self):
-        stats = {"H1": 0, "H2": 0, "H3": 0}
+        desc_tag = self.soup.find("meta", attrs={"name": "description"})
+        desc = desc_tag["content"] if desc_tag else "N/A"
 
-        for item in self.data:
-            if item['Type'] in stats:
-                stats[item['Type']] += 1
+        return title, desc
 
-        return stats
+    def get_headings(self):
+        h1 = len(self.soup.find_all("h1"))
+        h2 = len(self.soup.find_all("h2"))
+        h3 = len(self.soup.find_all("h3"))
+        return h1, h2, h3
 
-    def analyze_links(self):
-        internal, external = 0, 0
-        base_domain = urlparse(self.url).netloc
+    def get_links(self):
+        links = self.soup.find_all("a", href=True)
+        internal = 0
+        external = 0
 
-        for item in self.data:
-            link = item['Link']
-            if link != "N/A":
-                domain = urlparse(link).netloc
-                if base_domain in domain:
-                    internal += 1
-                else:
-                    external += 1
+        for link in links:
+            if self.url in link["href"]:
+                internal += 1
+            else:
+                external += 1
 
         return internal, external
 
-    def seo_score(self, stats):
-        score = 100
-
-        if stats['H1'] == 0:
-            score -= 30
-        if stats['H1'] > 1:
-            score -= 20
-        if stats['H2'] == 0:
-            score -= 10
-        if self.meta['description'] == "N/A":
-            score -= 20
-
-        return max(score, 0)
+    def seo_score(self, h1, desc):
+        score = 50
+        if h1 > 0:
+            score += 20
+        if desc != "N/A":
+            score += 30
+        return min(score, 100)
 
     def full_report(self):
-        stats = self.analyze_structure()
-        internal, external = self.analyze_links()
-        score = self.seo_score(stats)
+        title, desc = self.get_meta()
+        h1, h2, h3 = self.get_headings()
+        internal, external = self.get_links()
+        score = self.seo_score(h1, desc)
+
+        suggestions = []
+        if h1 == 0:
+            suggestions.append("Add H1 heading")
+        if desc == "N/A":
+            suggestions.append("Add meta description")
 
         return {
-            "meta": self.meta,
-            "stats": stats,
-            "internal_links": internal,
-            "external_links": external,
-            "seo_score": score
+            "score": score,
+            "title": title,
+            "description": desc,
+            "h1": h1,
+            "h2": h2,
+            "h3": h3,
+            "internal": internal,
+            "external": external,
+            "suggestions": suggestions
         }
