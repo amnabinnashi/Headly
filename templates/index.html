@@ -17,49 +17,55 @@
         <button type="submit">Analyze</button>
     </form>
 
-    {% if data %}
-        <div class="results">
-
-            <div class="card">
-                <h3>SEO Score</h3>
-                <p>{{ data.score }}</p>
-            </div>
-
-            <div class="card">
-                <h3>Meta Title</h3>
-                <p>{{ data.title }}</p>
-            </div>
-
-            <div class="card">
-                <h3>Meta Description</h3>
-                <p>{{ data.description }}</p>
-            </div>
-
-            <div class="card">
-                <h3>Headings</h3>
-                <p>H1: {{ data.h1 }} | H2: {{ data.h2 }} | H3: {{ data.h3 }}</p>
-            </div>
-
-            <div class="card">
-                <h3>Links</h3>
-                <p>Internal: {{ data.internal_links }} | External: {{ data.external_links }}</p>
-            </div>
-
-            <div class="card">
-                <h3>SEO Suggestions</h3>
-                <ul>
-                    {% for s in data.suggestions %}
-                        <li>{{ s }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-        </div>
+    {% if data and data.error %}
+        <p class="error">{{ data.error }}</p>
     {% endif %}
 
+    {% if data and not data.error %}
+    <div class="results">
+
+        <div class="card">
+            <h3>SEO Score</h3>
+            <p>{{ data.score }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Meta Title</h3>
+            <p>{{ data.title }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Meta Description</h3>
+            <p>{{ data.description }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Headings</h3>
+            <p>H1: {{ data.h1 }} | H2: {{ data.h2 }} | H3: {{ data.h3 }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Links</h3>
+            <p>Internal: {{ data.internal_links }} | External: {{ data.external_links }}</p>
+        </div>
+
+        <div class="card">
+            <h3>SEO Suggestions</h3>
+            <ul>
+                {% for s in data.suggestions %}
+                    <li>{{ s }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+    {% endif %}
+
+    <div class="footer">
+        © 2026 Headly by Amna
+    </div>
+
 </div>
-<div class="footer">
-    Made with ❤️ by Headly
-</div>
+
 </body>
 </html>
