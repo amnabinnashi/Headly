@@ -4,13 +4,11 @@ import os
 
 app = Flask(__name__)
 
-# Home route
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# Analyze endpoint
 @app.route("/analyze", methods=["POST"])
 def analyze():
     data = request.get_json()
@@ -27,12 +25,9 @@ def analyze():
 
     report = tool.full_report()
 
-    return jsonify({
-        "report": report
-    })
+    return jsonify(report)
 
 
-# Run server (Render compatible)
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
