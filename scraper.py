@@ -1,19 +1,20 @@
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
+
 
 def analyze_site(url):
     headers = {
-        "User-Agent": "Mozilla/5.0"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     }
 
     try:
         res = requests.get(url, headers=headers, timeout=10)
-    except:
-        return {"error": "فشل الاتصال بالموقع"}
+    except Exception:
+        return {"error": "Failed to connect to the site"}
 
     if res.status_code != 200:
-        return {"error": "الموقع لا يستجيب"}
+        return {"error": f"Site returned status code {res.status_code}"}
 
     soup = BeautifulSoup(res.text, "html.parser")
 
@@ -21,16 +22,16 @@ def analyze_site(url):
     suggestions = []
 
     # ---------------- TITLE ----------------
-    title = soup.title.string.strip() if soup.title else ""
+    title = soup.title.string.strip() if soup.title and soup.title.string else ""
 
     if title:
         score += 20
         if 30 <= len(title) <= 60:
             score += 10
         else:
-            suggestions.append("حسّن طول العنوان (30-60 حرف)")
+            suggestions.append("Optimize title length (30–60 characters)")
     else:
-        suggestions.append("أضف عنوان للصفحة (Meta Title)")
+        suggestions.append("Add a meta title")
 
     # ---------------- DESCRIPTION ----------------
     desc_tag = soup.find("meta", attrs={"name": "description"})
@@ -41,9 +42,9 @@ def analyze_site(url):
         if 50 <= len(description) <= 160:
             score += 10
         else:
-            suggestions.append("الوصف لازم يكون بين 50-160 حرف")
+            suggestions.append("Optimize description length (50–160 characters)")
     else:
-        suggestions.append("أضف Meta Description")
+        suggestions.append("Add a meta description")
 
     # ---------------- HEADINGS ----------------
     h1_tags = soup.find_all("h1")
@@ -58,17 +59,17 @@ def analyze_site(url):
         score += 15
     elif h1 > 1:
         score += 5
-        suggestions.append("يفضل يكون H1 واحد فقط")
+        suggestions.append("Use only one H1 tag")
     else:
-        suggestions.append("أضف H1")
+        suggestions.append("Add an H1 tag")
 
     if h2 > 0:
         score += 10
     else:
-        suggestions.append("أضف H2 لتحسين الهيكلة")
+        suggestions.append("Add H2 tags for better structure")
 
     # ---------------- LINKS ----------------
-    links = soup.find_all("a")
+    links = soup.find_all("a", href=True)
     internal = 0
     external = 0
 
@@ -76,21 +77,23 @@ def analyze_site(url):
 
     for link in links:
         href = link.get("href")
-        if href:
-            if domain in href:
-                internal += 1
-            elif href.startswith("http"):
-                external += 1
+
+        full_url = urljoin(url, href)
+
+        if domain in urlparse(full_url).netloc:
+            internal += 1
+        else:
+            external += 1
 
     if internal > 0:
         score += 10
     else:
-        suggestions.append("أضف روابط داخلية")
+        suggestions.append("Add internal links")
 
     if external > 0:
         score += 5
 
-    # ---------------- IMAGES (ALT) ----------------
+    # ---------------- IMAGES ----------------
     images = soup.find_all("img")
     missing_alt = 0
 
@@ -102,7 +105,17 @@ def analyze_site(url):
         if missing_alt == 0:
             score += 10
         else:
-            suggestions.append("بعض الصور بدون alt text")
+            suggestions.append("Some images are missing alt text")
+    else:
+        suggestions.append("Add images with alt text")
+
+    # ---------------- PAGE SIZE ----------------
+    page_size_kb = len(res.content) / 1024
+
+    if page_size_kb < 500:
+        score += 5
+    else:
+        suggestions.append("Reduce page size for better performance")
 
     # ---------------- FINAL ----------------
     if score > 100:
@@ -118,6 +131,7 @@ def analyze_site(url):
         "external_links": external,
         "images": len(images),
         "missing_alt": missing_alt,
+        "page_size_kb": round(page_size_kb, 2),
         "score": score,
         "suggestions": suggestions
     }
