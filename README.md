@@ -1,4 +1,4 @@
-# Headly Pro
+# Headly
 
 Advanced web analyzer for extracting headings, links, and SEO insights from any website.
 
