@@ -1,41 +1,40 @@
-# Headly
+# Headly Pro
 
-Headly is a web application that analyzes any website and extracts its structural headings (H1, H2, H3) instantly.
+Advanced web analyzer for extracting headings, links, and SEO insights from any website.
+
+---
 
 ## Overview
 
-This project was built to demonstrate practical skills in web development, including backend development, web scraping, and deployment. Headly allows users to quickly understand the structure of any webpage by extracting its main headings.
+Headly Pro is a web-based tool built with Python and Flask that allows users to analyze website structure and extract key SEO data including:
+
+- Headings (H1, H2, H3)
+- Internal and external links
+- Meta tags (title and description)
+- SEO score
+- Structured data in table format
+
+---
 
 ## Features
 
-- Extracts H1, H2, and H3 headings from any website
-- Simple and clean user interface
-- Fast response and real-time analysis
-- Works with most public websites
+- Website structure analysis
+- Link analysis (internal vs external)
+- SEO score calculation
+- Meta tag extraction
+- Clean user interface
+- Export-ready data
 
-## How It Works
-
-1. Enter a website URL  
-2. Click "Analyze"  
-3. The application fetches the webpage  
-4. Displays all headings in a structured format  
+---
 
 ## Tech Stack
 
-- Backend: Python (Flask)
-- Frontend: HTML, CSS
-- Web Scraping: BeautifulSoup
-- HTTP Requests: Requests
-- Deployment: Render
+- Python
+- Flask
+- BeautifulSoup
+- Pandas
+- HTML, CSS, JavaScript
 
-## Live Demo
+---
 
-https://web-insight-scraper.onrender.com
-
-## Installation
-
-```bash
-git clone https://github.com/your-username/headly.git
-cd headly
-pip install -r requirements.txt
-python app.py
+## Project Structure
