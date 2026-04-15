@@ -1,58 +1,70 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <title>Headly</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #2e7d32, #66bb6a);
+    color: white;
+    text-align: center;
+}
 
-<div class="container">
+.container {
+    padding: 40px 20px;
+}
 
-    <h1>Headly</h1>
-    <p class="subtitle">Advanced Website Analyzer</p>
+h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
 
-    <div class="input-box">
-        <input id="url" type="text" placeholder="https://example.com">
-        <button onclick="analyze()">Analyze</button>
-    </div>
+.subtitle {
+    opacity: 0.8;
+    margin-bottom: 30px;
+}
 
-    <div id="results" class="results hidden">
+form {
+    margin-bottom: 30px;
+}
 
-        <div class="card">
-            <h3>SEO Score</h3>
-            <div id="score" class="value">-</div>
-        </div>
+input {
+    padding: 12px;
+    width: 250px;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+}
 
-        <div class="card">
-            <h3>Meta Title</h3>
-            <div id="title" class="value">-</div>
-        </div>
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    background: #00e676;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-        <div class="card">
-            <h3>Meta Description</h3>
-            <div id="desc" class="value">-</div>
-        </div>
+button:hover {
+    background: #00c853;
+}
 
-        <div class="card">
-            <h3>Headings</h3>
-            <div id="headings" class="value">-</div>
-        </div>
+.results {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
 
-        <div class="card">
-            <h3>Links</h3>
-            <div id="links" class="value">-</div>
-        </div>
+.card {
+    background: rgba(255,255,255,0.15);
+    padding: 20px;
+    width: 300px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
 
-        <div class="card">
-            <h3>SEO Suggestions</h3>
-            <div id="suggestions" class="value">-</div>
-        </div>
+.card h3 {
+    margin-bottom: 10px;
+}
 
-    </div>
-
-</div>
-
-<script src="/static/script.js"></script>
-</body>
-</html>
+ul {
+    text-align: left;
+}
