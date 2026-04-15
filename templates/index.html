@@ -2,160 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Headly | Web Analyzer</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: white;
-            min-height: 100vh;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .nav {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        .container {
-            text-align: center;
-            margin-top: 80px;
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: 42px;
-            margin-bottom: 10px;
-        }
-
-        p {
-            opacity: 0.7;
-            margin-bottom: 30px;
-        }
-
-        .input-box {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        input {
-            width: 60%;
-            max-width: 400px;
-            padding: 15px;
-            border-radius: 50px;
-            border: none;
-            outline: none;
-            font-size: 14px;
-        }
-
-        button {
-            padding: 15px 25px;
-            border-radius: 50px;
-            border: none;
-            background: linear-gradient(135deg, #ff7a18, #ffb347);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            transform: scale(1.05);
-        }
-
-        .results {
-            margin-top: 30px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .card {
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 15px;
-            text-align: left;
-            backdrop-filter: blur(10px);
-        }
-
-        .tag {
-            font-size: 12px;
-            color: #ffb347;
-            margin-bottom: 5px;
-        }
-
-        footer {
-            position: fixed;
-            bottom: 10px;
-            width: 100%;
-            text-align: center;
-            font-size: 12px;
-            opacity: 0.6;
-        }
-
-    </style>
+    <title>Headly Pro</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
-<header>
-    <div class="logo">Headly</div>
-    <div class="nav">Web Analyzer</div>
-</header>
-
 <div class="container">
-    <h1>Analyze Websites Easily</h1>
-    <p>Extract headings (H1, H2, H3) from any website instantly</p>
+    <h1>Headly Pro 🚀</h1>
+    <p>Advanced Website Analyzer</p>
 
-    <form method="POST">
-        <div class="input-box">
-            <input type="text" name="url" placeholder="Enter website URL..." required>
-            <button type="submit">Analyze</button>
-        </div>
-    </form>
-
-    {% if headings %}
-    <div class="results">
-        <p>Found {{ headings|length }} headings</p>
-
-        {% for tag, text in headings %}
-        <div class="card">
-            <div class="tag">{{ tag }}</div>
-            <div>{{ text }}</div>
-        </div>
-        {% endfor %}
+    <div class="search-box">
+        <input type="text" id="url" placeholder="Enter Website URL">
+        <button onclick="analyze()">Analyze</button>
     </div>
-    {% endif %}
 
+    <!-- RESULTS -->
+    <div id="results" class="hidden">
+
+        <div class="card">
+            <h2>SEO Score</h2>
+            <p id="seoScore"></p>
+        </div>
+
+        <div class="card">
+            <h2>Meta Info</h2>
+            <p><strong>Title:</strong> <span id="metaTitle"></span></p>
+            <p><strong>Description:</strong> <span id="metaDesc"></span></p>
+        </div>
+
+        <div class="card">
+            <h2>Headings</h2>
+            <p id="headings"></p>
+        </div>
+
+        <div class="card">
+            <h2>Links</h2>
+            <p id="links"></p>
+        </div>
+
+        <div class="card">
+            <h2>Data</h2>
+            <table id="dataTable"></table>
+        </div>
+
+    </div>
 </div>
 
-<footer>
-    © 2026 Headly. All rights reserved.
-</footer>
-
+<script src="/static/script.js"></script>
 </body>
 </html>
